@@ -1,0 +1,2094 @@
+#include <iostream>
+
+#include <iomanip>
+
+//#include <windows.h>
+
+#include <vector>
+
+#include <string>
+
+#include <cctype> 
+
+#include <regex>
+
+#include <unordered_map>
+
+#include <sstream>
+
+#include <chrono>
+
+#include <limits> 
+
+using namespace std;
+
+int choice; 
+
+
+
+
+int getMenuChoice(int minOption, int maxOption) {
+
+
+
+    string input;
+
+    int choice;
+
+
+
+    while (true) {
+
+        cout << "Enter your choice: ";
+
+        getline(cin, input);
+
+
+
+        stringstream ss(input);
+
+        if (ss >> choice && !(ss >> input)) { // valid number and nothing extra
+
+            if (choice >= minOption && choice <= maxOption) {
+
+                return choice;
+
+            }
+
+        }
+
+        cout << "❌ Invalid input! Please enter a number between " << minOption << " and " << maxOption << ".\n";
+
+    }
+
+}
+
+
+
+struct User {
+
+    string username;
+
+    string password;
+
+    string role;
+
+};
+
+string selectCourseYear() {
+
+    vector<string> courses = {"BSCS", "BSIT", "BSIS", "BSCE"};
+
+    vector<string> years = {"1st Year", "2nd Year", "3rd Year", "4th Year"};
+
+
+
+    int courseChoice = 0;
+
+    int yearChoice = 0;
+
+    const int maxAttempts = 3;
+
+
+
+    // Select Course with up to 3 attempts
+
+    for (int attempt = 1; attempt <= maxAttempts; ++attempt) {
+
+        cout << "\n-------------------\n";
+
+        cout << "   Select Course\n";
+
+        cout << "-------------------\n";
+
+        for (size_t i = 0; i < courses.size(); ++i) {
+
+            cout << i + 1 << ". " << courses[i] << '\n';
+
+        }
+
+        cout << "Enter your course choice: ";
+
+        cin >> courseChoice;
+
+
+
+        if (courseChoice >= 1 && courseChoice <= (int)courses.size()) {
+
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');  // flush newline
+
+            break;  // valid input, exit loop
+
+        } else {
+
+            cout << "❌ Invalid course selection. Attempts left: " << maxAttempts - attempt << "\n";
+
+            cin.clear();  // clear error flags
+
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');  // flush bad input
+
+            if (attempt == maxAttempts) return "";  // cancel after 3 attempts
+
+        }
+
+    }
+
+
+
+    // Select Year with up to 3 attempts
+
+    for (int attempt = 1; attempt <= maxAttempts; ++attempt) {
+
+        cout << "\n-------------------\n";
+
+        cout << "      Select Year\n";
+
+        cout << "-------------------\n";
+
+        for (size_t i = 0; i < years.size(); ++i) {
+
+            cout << i + 1 << ". " << years[i] << '\n';
+
+        }
+
+        cout << "Enter your year choice: ";
+
+        cin >> yearChoice;
+
+
+
+        if (yearChoice >= 1 && yearChoice <= (int)years.size()) {
+
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');  // flush newline
+
+            break;  // valid input, exit loop
+
+        } else {
+
+            cout << "❌ Invalid year level selection. Attempts left: " << maxAttempts - attempt << "\n";
+
+            cin.clear();
+
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            if (attempt == maxAttempts) return "";  // cancel after 3 attempts
+
+        }
+
+    }
+
+
+
+    return courses[courseChoice - 1] + " " + years[yearChoice - 1];
+
+}
+
+string selectStatus() {
+
+    int choice;
+
+    const int maxAttempts = 3;
+
+
+
+    for (int attempt = 1; attempt <= maxAttempts; ++attempt) {
+
+        cout << "\n📌 -------------------\n";
+
+        cout << "   Select Status\n";
+
+        cout << "-------------------\n";
+
+        cout << "  1. Enrolled\n";
+
+        cout << "  2. Graduated\n";
+
+        cout << "  3. Dropped\n";
+
+        cout << "-------------------\n";
+
+        cout << "Enter choice (1-3): ";
+
+        cin >> choice;
+
+
+
+        if (cin.fail()) {
+
+            cin.clear(); // clear error flag
+
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard bad input
+
+            cout << "❌ Invalid input type. Try again.\n";
+
+            continue;
+
+        }
+
+
+
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // flush newline
+
+
+
+        switch (choice) {
+
+            case 1: return "Enrolled";
+
+            case 2: return "Graduated";
+
+            case 3: return "Dropped";
+
+            default:
+
+                cout << "❌ Invalid choice. Attempts left: " << maxAttempts - attempt << "\n";
+
+        }
+
+    }
+
+    return ""; // return empty string after 3 failed attempts
+
+}
+
+string selectGender() {
+
+    int choice;
+
+    const int maxAttempts = 3;
+
+
+
+    for (int attempt = 1; attempt <= maxAttempts; ++attempt) {
+
+        cout << "\n📌 -------------------\n";
+
+        cout << "   Select Gender\n";
+
+        cout << "-------------------\n";
+
+        cout << "  1. Male\n";
+
+        cout << "  2. Female\n";
+
+        cout << "  3. Other\n";
+
+        cout << "-------------------\n";
+
+        cout << "Enter choice (1-3): ";
+
+        cin >> choice;
+
+
+
+        if (cin.fail()) {
+
+            cin.clear();  // clear error flag
+
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');  // discard invalid input
+
+            cout << "❌ Invalid input type. Try again.\n";
+
+            continue;  // retry without incrementing attempt counter, or you can increment if you want
+
+        }
+
+
+
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');  // flush newline
+
+
+
+        switch (choice) {
+
+            case 1: return "Male";
+
+            case 2: return "Female";
+
+            case 3: return "Other";
+
+            default:
+
+                cout << "❌ Invalid choice. Attempts left: " << maxAttempts - attempt << "\n";
+
+        }
+
+    }
+
+    return "";  // return empty string after 3 failed attempts
+
+}
+
+
+
+void addRecord(std::vector<std::vector<std::string>>& records);
+
+void displayRecords(const std::vector<std::vector<std::string>>& records);
+
+void editRecord(std::vector<std::vector<std::string>>& records);
+
+void displayRecords(const vector<vector<string>>& records);
+
+void addRecord(vector<vector<string>>& records);
+
+
+
+bool isValidName(const std::string& name);
+
+bool isValidAge(const std::string& age);
+
+bool isValidPhone(const string& phone);
+
+bool isValidEmail(const string& email);
+
+bool isValidContactNumber(const string& number);
+
+bool isValidStudentID(const string& id);
+
+bool login(string &userRole, unordered_map<string, User>& users);
+
+bool registerUser(unordered_map<string, User>& users);
+
+bool exitFlag = false;
+
+
+
+bool isDuplicateRecord(const vector<vector<string>>& records, const string& studentID, const string& contact, const string& email) {
+
+    for (const auto& record : records) {
+
+        if (record[0] == studentID ||  // student ID
+
+            record[6] == contact ||    // contact number
+
+            (!email.empty() && !record[7].empty() && record[7] == email)) { // email
+
+            return true;
+
+        }
+
+    }
+
+    return false;
+
+}
+
+bool isDuplicateRecord(const vector<vector<string>>& records, const vector<string>& newRecord) {
+
+    for (const auto& record : records) {
+
+        if (record[0] == newRecord[0] || // Student ID
+
+            record[3] == newRecord[3] || // Email
+
+            record[2] == newRecord[2]) { // Phone
+
+            return true;
+
+        }
+
+    }
+
+    return false;
+
+}
+
+bool login(string &userRole, unordered_map<string, User>& users) {
+
+    string username, password;
+
+
+
+    cout << "Username: ";
+
+    cin >> username;
+
+
+
+    cout << "Password: ";
+
+    cin >> password;
+
+
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+
+
+    auto it = users.find(username);
+
+    if (it != users.end() && it->second.password == password) {
+
+        userRole = it->second.role;
+
+        return true;
+
+    }
+
+
+
+    cout << "❌ Invalid username or password.\n";
+
+    return false;
+
+}
+
+bool registerUser(unordered_map<string, User>& users) {
+
+    string username, password, role;
+
+
+
+    cout << "\n--- REGISTER NEW ACCOUNT ---\n";
+
+
+
+    cout << "Enter new username: ";
+
+    getline(cin, username);
+
+
+
+    if (users.find(username) != users.end()) {
+
+        cout << "❌ Username already exists! Try a different one.\n\n";
+
+        return false;
+
+    }
+
+
+
+    cout << "Enter password: ";
+
+    getline(cin, password);
+
+
+
+    cout << "Enter role (admin/student): ";
+
+    getline(cin, role);
+
+    if (role != "admin" && role != "student") {
+
+        cout << "❌ Invalid role. Must be 'admin' or 'student'.\n\n";
+
+        return false;
+
+    }
+
+
+
+    users[username] = User{username, password, role};
+
+    cout << "✅ Registration successful!\n\n";
+
+    return true;
+
+}
+
+bool isValidName(const string& name) {
+
+    if (name.empty()) return false;
+
+    for (char c : name) {
+
+        if (isdigit(c)) return false;  // no digits allowed
+
+    }
+
+    return true;
+
+}
+
+bool isValidAge(const string& age) {
+
+    if (age.empty() || age.length() > 2) return false;
+
+
+
+    for (char c : age) {
+
+        if (!isdigit(c)) return false;  // all chars must be digits
+
+    }
+
+
+
+    return true;
+
+}
+
+bool isValidPhone(const string& phone) {
+
+    if (phone.length() < 10 || phone.length() > 11) return false;
+
+    for (char c : phone) {
+
+        if (!isdigit(c)) return false;
+
+    }
+
+    return true;
+
+}
+
+bool isValidEmail(const string& email) {
+
+    regex pattern(R"((\w+)(\.|_)?(\w*)@(\w+)(\.(\w+))+)");
+
+    return regex_match(email, pattern);
+
+}
+
+bool isValidStudentID(const string& id) {
+
+    if (id.empty()) return false;
+
+
+
+    for (char c : id) {
+
+        if (!isdigit(c)) return false;
+
+    }
+
+
+
+    return true;
+
+}
+
+bool isValidContactNumber(const string& number) {
+
+    
+
+    if (number.length() < 10 || number.length() > 13) return false;
+
+
+
+    
+
+    for (char c : number) {
+
+        if (!isdigit(c)) return false;
+
+    }
+
+
+
+    return true;
+
+}
+
+
+
+void searchRecord(const vector<vector<string>>& records) {
+
+    if (records.empty()) {
+
+        cout << "\n❗ No records to search.\n";
+
+        return;
+
+    }
+
+
+
+    int choice;
+
+    string keyword;
+
+    bool found = false;
+
+
+
+    cout << "\n════════════════════════════════\n";
+
+    cout << "         🔍 Search Menu\n";
+
+    cout << "════════════════════════════════\n";
+
+    cout << "[1] Search by Student ID\n";
+
+    cout << "[2] Search by Name\n";
+
+    cout << "[3] Search by Status\n";
+
+    cout << "[0] Cancel\n";
+
+    cout << "Enter choice: ";
+
+    cin >> choice;
+
+    cin.ignore();
+
+
+
+    if (choice == 0) return;
+
+
+
+    cout << "Enter keyword to search: ";
+
+    getline(cin, keyword);
+
+
+
+    cout << "\n═══════════════════════════════════════════════════════════════════════════════════════════════\n";
+
+    cout << " Search Results:\n";
+
+    cout << "═══════════════════════════════════════════════════════════════════════════════════════════════\n";
+
+    cout << left << setw(5) << "No."
+
+         << setw(12) << "Student ID"
+
+         << setw(22) << "Name"
+
+         << setw(6)  << "Age"
+
+         << setw(8)  << "Gender"
+
+         << setw(20) << "Course & Year"
+
+         << setw(12) << "Status"
+
+         << setw(18) << "Contact No."
+
+         << setw(25) << "Email" << "\n";
+
+    cout << string(140, '-') << "\n";
+
+
+
+    int index = 1;
+
+    for (const auto& record : records) {
+
+        bool match = false;
+
+        switch (choice) {
+
+            case 1: match = (record[0] == keyword); break; // Student ID
+
+            case 2: match = (record[1].find(keyword) != string::npos); break; // Name (partial match)
+
+            case 3: match = (record[5].find(keyword) != string::npos); break; // Status (partial match)
+
+            default: 
+
+                cout << "❌ Invalid search type selected.\n";
+
+                return;
+
+        }
+
+
+
+        if (match) {
+
+            found = true;
+
+            cout << left << setw(5) << index++
+
+                 << setw(12) << record[0]
+
+                 << setw(22) << record[1]
+
+                 << setw(6)  << record[2]
+
+                 << setw(8)  << record[3]
+
+                 << setw(20) << record[4]
+
+                 << setw(12) << record[5]
+
+                 << setw(18) << record[6]
+
+                 << setw(25) << record[7] << "\n";
+
+        }
+
+    }
+
+
+
+    if (!found) {
+
+        cout << "❌ No matching records found.\n";
+
+    }
+
+
+
+    cout << string(140, '-') << "\n";
+
+}
+
+void merge(vector<vector<string>>& records, int left, int mid, int right, int fieldIndex) {
+
+    vector<vector<string>> leftVec(records.begin() + left, records.begin() + mid + 1);
+
+    vector<vector<string>> rightVec(records.begin() + mid + 1, records.begin() + right + 1);
+
+
+
+    int i = 0, j = 0, k = left;
+
+
+
+    while (i < leftVec.size() && j < rightVec.size()) {
+
+        if (leftVec[i][fieldIndex] <= rightVec[j][fieldIndex]) {
+
+            records[k++] = leftVec[i++];
+
+        } else {
+
+            records[k++] = rightVec[j++];
+
+        }
+
+    }
+
+
+
+    while (i < leftVec.size()) records[k++] = leftVec[i++];
+
+    while (j < rightVec.size()) records[k++] = rightVec[j++];
+
+}
+
+void mergeSort(vector<vector<string>>& records, int left, int right, int fieldIndex) {
+
+    if (left < right) {
+
+        int mid = left + (right - left) / 2;
+
+        mergeSort(records, left, mid, fieldIndex);
+
+        mergeSort(records, mid + 1, right, fieldIndex);
+
+        merge(records, left, mid, right, fieldIndex);
+
+    }
+
+}
+
+void insertionSort(vector<vector<string>>& records, int fieldIndex) {
+
+    for (size_t i = 1; i < records.size(); ++i) {
+
+        auto key = records[i];
+
+        int j = i - 1;
+
+        while (j >= 0 && records[j][fieldIndex] > key[fieldIndex]) {
+
+            records[j + 1] = records[j];
+
+            j--;
+
+        }
+
+        records[j + 1] = key;
+
+    }
+
+}
+
+void clearScreen() {
+
+#ifdef _WIN32
+
+    system("cls");
+
+#else
+
+    system("clear");
+
+#endif
+
+}
+
+void displayBannerWithButtons() {
+
+    // Title Box
+
+    cout << "╔════════════════════════════════════════════════════════╗\n";
+
+    cout << "║                🧾 STUDENT RECORD SYSTEM 🧾             ║\n";
+
+    cout << "╚════════════════════════════════════════════════════════╝\n\n";
+
+
+
+    // Welcome message
+
+    cout << "Welcome! Please choose an option below:\n\n";
+
+
+
+    // Button Boxes
+
+    cout << "╔════════════════╗\n";
+
+    cout << "║ 1. Login       ║\n";
+
+    cout << "╚════════════════╝\n";
+
+    cout << "╔══════════════════════╗\n";
+
+    cout << "║ 2. Register          ║\n";
+
+    cout << "╚══════════════════════╝\n";
+
+    cout << "╔════════════════╗\n";
+
+    cout << "║ 3. Exit        ║\n";
+
+    cout << "╚════════════════╝\n\n";
+
+}
+
+void displayRegisteredAccounts(const unordered_map<string, User>& users) {
+
+    cout << "\n👥 Registered Accounts:\n";
+
+    cout << "────────────────────────────────────────────\n";
+
+    cout << left << setw(20) << "Username" << setw(20) << "Password" << "Role\n";
+
+    cout << "────────────────────────────────────────────\n";
+
+
+
+    for (const auto& [username, user] : users) {
+
+        cout << left << setw(20) << username << setw(20) << user.password << user.role << "\n";
+
+    }
+
+
+
+    cout << "────────────────────────────────────────────\n\n";
+
+}
+
+void bubbleSort(vector<vector<string>>& records, int fieldIndex) {
+
+    for (size_t i = 0; i < records.size(); ++i) {
+
+        for (size_t j = 0; j < records.size() - i - 1; ++j) {
+
+            if (records[j][fieldIndex] > records[j + 1][fieldIndex]) {
+
+                swap(records[j], records[j + 1]);
+
+            }
+
+        }
+
+    }
+
+}
+
+void selectionSort(vector<vector<string>>& records, int fieldIndex) {
+
+    for (size_t i = 0; i < records.size(); ++i) {
+
+        size_t minIndex = i;
+
+        for (size_t j = i + 1; j < records.size(); ++j) {
+
+            if (records[j][fieldIndex] < records[minIndex][fieldIndex]) {
+
+                minIndex = j;
+
+            }
+
+        }
+
+        swap(records[i], records[minIndex]);
+
+    }
+
+}
+
+void sortRecords(vector<vector<string>>& records) {
+
+    if (records.empty()) {
+
+        cout << "\n📂 No records to sort.\n";
+
+        return;
+
+    }
+
+
+
+    int fieldChoice, algoChoice;
+
+
+
+    cout << "\n-------------------\n";
+
+    cout << "     SORT BY:      \n";
+
+    cout << "-------------------\n";
+
+    cout << "1. Student ID\n";
+
+    cout << "2. Name\n";
+
+    cout << "3. Age\n";
+
+    cout << "4. Gender\n";
+
+    cout << "5. Course & Year\n";
+
+    cout << "6. Status\n";
+
+    cout << "-------------------\n";
+
+    cout << "Enter your choice (1-6): ";
+
+    cin >> fieldChoice;
+
+
+
+    if (cin.fail() || fieldChoice < 1 || fieldChoice > 6) {
+
+        cin.clear();
+
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+        cout << "❌ Invalid field choice.\n";
+
+        return;
+
+    }
+
+
+
+    cout << "\n-------------------\n";
+
+    cout << "  SORT ALGORITHM:  \n";
+
+    cout << "-------------------\n";
+
+    cout << "1. Bubble Sort\n";
+
+    cout << "2. Selection Sort\n";
+
+    cout << "3. Insertion Sort\n";
+
+    cout << "4. Merge Sort\n";
+
+    cout << "-------------------\n";
+
+    cout << "Enter your choice (1-4): ";
+
+    cin >> algoChoice;
+
+
+
+    if (cin.fail() || algoChoice < 1 || algoChoice > 4) {
+
+        cin.clear();
+
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+        cout << "❌ Invalid algorithm choice.\n";
+
+        return;
+
+    }
+
+
+
+    int columnIndex = fieldChoice - 1;
+
+
+
+    auto start = chrono::high_resolution_clock::now();
+
+
+
+    switch (algoChoice) {
+
+        case 1:
+
+            bubbleSort(records, columnIndex);
+
+            cout << "✅ Records sorted using Bubble Sort.\n";
+
+            break;
+
+        case 2:
+
+            selectionSort(records, columnIndex);
+
+            cout << "✅ Records sorted using Selection Sort.\n";
+
+            break;
+
+        case 3:
+
+            insertionSort(records, columnIndex);
+
+            cout << "✅ Records sorted using Insertion Sort.\n";
+
+            break;
+
+        case 4:
+
+            mergeSort(records, 0, records.size() - 1, columnIndex);
+
+            cout << "✅ Records sorted using Merge Sort.\n";
+
+            break;
+
+    }
+
+
+
+    auto end = chrono::high_resolution_clock::now();
+
+    chrono::duration<double> duration = end - start;
+
+    cout << "⏱️ Sort completed in " << duration.count() << " seconds.\n";
+
+
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+}
+
+void editRecord(vector<vector<string>>& records) {
+
+    if (records.empty()) {
+
+        cout << "\n📂 No records to edit.\n";
+
+        return;
+
+    }
+
+
+
+    displayRecords(records);  
+
+
+
+    int index;
+
+    cout << "Enter the record number to edit: ";
+
+    cin >> index;
+
+
+
+    if (index < 1 || index > records.size()) {
+
+        cout << "❌ Invalid record number.\n";
+
+        return;
+
+    }
+
+    index--; 
+
+
+
+   
+
+    string& studentID = records[index][0];  
+
+    string& name = records[index][1];
+
+    string& age = records[index][2];
+
+    string& gender = records[index][3];
+
+    string& courseYear = records[index][4];
+
+    string& status = records[index][5];
+
+    string& contactNumber = records[index][6];
+
+    string& email = records[index][7];
+
+
+
+int choice;
+
+cout << "\n══════════════════════════════\n";
+
+cout << "       ✏️  EDIT FIELD MENU\n";
+
+cout << "══════════════════════════════\n";
+
+cout << "1. 📝 Name\n";
+
+cout << "2. 🔢 Age\n";
+
+cout << "3. 🚻 Gender\n";
+
+cout << "4. 🏫 Course & Year\n";
+
+cout << "5. 📘 Status\n";
+
+cout << "6. ☎️ Contact Number\n";
+
+cout << "7. 📧 Email\n";
+
+cout << "══════════════════════════════\n";
+
+cout << "Enter your choice: ";
+
+cin >> choice;
+
+cin.ignore();  // flush newline
+
+
+
+
+
+    switch (choice) {
+
+        case 1: {
+
+            string newName;
+
+            int attempts = 0;
+
+            while (attempts < 3) {
+
+                cout << "Enter new name: ";
+
+                getline(cin, newName);
+
+                if (isValidName(newName)) {
+
+                    name = newName;
+
+                    cout << "✅ Name updated!\n";
+
+                    return;
+
+                } else {
+
+                    cout << "Invalid name. Try again.\n";
+
+                    attempts++;
+
+                }
+
+            }
+
+            cout << "❌ Too many invalid attempts. Name not changed.\n";
+
+            break;
+
+        }
+
+        case 2: {
+
+            string newAge;
+
+            int attempts = 0;
+
+            while (attempts < 3) {
+
+                cout << "Enter new age: ";
+
+                getline(cin, newAge);
+
+                if (isValidAge(newAge)) {
+
+                    age = newAge;
+
+                    cout << "✅ Age updated!\n";
+
+                    return;
+
+                } else {
+
+                    cout << "Invalid age. Try again.\n";
+
+                    attempts++;
+
+                }
+
+            }
+
+            cout << "❌ Too many invalid attempts. Age not changed.\n";
+
+            break;
+
+        }
+
+        case 3: {
+
+            string newGender = selectGender();
+
+            if (!newGender.empty()) {
+
+                gender = newGender;
+
+                cout << "✅ Gender updated!\n";
+
+            } else {
+
+                cout << "❌ Gender not changed.\n";
+
+            }
+
+            break;
+
+        }
+
+        case 4: {
+
+            cout << "Select new Course & Year:\n";
+
+            string newCourseYear = selectCourseYear();
+
+            if (!newCourseYear.empty()) {
+
+                 courseYear = newCourseYear;
+
+                 cout << "✅ Course & Year updated!\n";
+
+             } else {
+
+        cout << "❌ Course & Year not changed.\n";
+
+    }
+
+    break;
+
+}
+
+
+
+       case 5: {
+
+    cout << "Select new Status:\n";
+
+    string newStatus = selectStatus();
+
+    if (!newStatus.empty()) {
+
+        status = newStatus;
+
+        cout << "✅ Status updated!\n";
+
+    } else {
+
+        cout << "❌ Status not changed.\n";
+
+    }
+
+    break;
+
+}
+
+
+
+        case 6: {
+
+            string newContact;
+
+            int attempts = 0;
+
+            while (attempts < 3) {
+
+                cout << "Enter new Contact Number: ";
+
+                getline(cin, newContact);
+
+                if (isValidContactNumber(newContact)) { 
+
+                    contactNumber = newContact;
+
+                    cout << "✅ Contact Number updated!\n";
+
+                    return;
+
+                } else {
+
+                    cout << "Invalid contact number. Try again.\n";
+
+                    attempts++;
+
+                }
+
+            }
+
+            cout << "❌ Too many invalid attempts. Contact Number not changed.\n";
+
+            break;
+
+        }
+
+        case 7: {
+
+            string newEmail;
+
+             int attempts = 0;
+
+             while (attempts < 3) {
+
+                 cout << "Enter new email: ";
+
+                 getline(cin, newEmail);
+
+                 if (isValidEmail(newEmail)) { 
+
+                       email = newEmail;
+
+                         cout << "✅ Email updated!\n";
+
+                      return;
+
+                 } else {
+
+            cout << "Invalid email. Try again.\n";
+
+            attempts++;
+
+        }
+
+    }
+
+    cout << "❌ Too many invalid attempts. Email not changed.\n";
+
+    break;
+
+}
+
+
+
+        default:
+
+            cout << "❌ Invalid field selection.\n";
+
+    }
+
+}
+
+void displayRecords(const vector<vector<string>>& records) {
+
+    if (records.empty()) {
+
+        cout << "\n📂 No records to display.\n";
+
+        return;
+
+    }
+
+
+
+    cout << "\n📋 --- RECORD LIST ---\n";
+
+
+
+    // Table header
+
+    cout << "+-----+------------+----------------------+-----+--------+------------------+-----------+------------------+--------------------------+\n";
+
+    cout << "| No. | Student ID | Name                 | Age | Gender | Course & Year    | Status    | Contact No.      | Email                    |\n";
+
+    cout << "+-----+------------+----------------------+-----+--------+------------------+-----------+------------------+--------------------------+\n";
+
+
+
+    for (size_t i = 0; i < records.size(); ++i) {
+
+        cout << "| ";
+
+        cout.width(3); cout << right << i + 1 << " | ";
+
+
+
+        cout.width(10); cout << left << records[i][0] << " | "; // Student ID
+
+        cout.width(20); cout << left << records[i][1] << " | "; // Name
+
+        cout.width(3); cout << right << records[i][2] << " | "; // Age
+
+        cout.width(6); cout << left << records[i][3] << " | "; // Gender
+
+        cout.width(16); cout << left << records[i][4] << " | "; // Course & Year
+
+        cout.width(9); cout << left << records[i][5] << " | "; // Status
+
+        cout.width(16); cout << left << records[i][6] << " | "; // Contact No.
+
+        cout.width(24); cout << left << records[i][7] << " |";  // Email
+
+
+
+        cout << endl;
+
+    }
+
+
+
+    cout << "+-----+------------+----------------------+-----+--------+------------------+-----------+------------------+--------------------------+\n";
+
+}
+
+void addRecord(vector<vector<string>>& records) {
+
+    string studentID, name, age, gender, courseYear, status, contact, email;
+
+    int attempts;
+
+
+
+    // Student ID
+
+    attempts = 0;
+
+    while (attempts < 3) {
+
+        cout << "\n══════════════════════════════\n";
+
+        cout << " Enter Student ID (numbers only)\n";
+
+        cout << "══════════════════════════════\n";
+
+        cout << "Enter Student ID: ";
+
+        getline(cin, studentID);
+
+
+
+        if (!isValidStudentID(studentID)) {
+
+            cout << "❌ Invalid Student ID!\n";
+
+            attempts++;
+
+            continue;
+
+        }
+
+
+
+        // Check for duplicate
+
+        bool duplicate = false;
+
+        for (const auto& record : records) {
+
+            if (record[0] == studentID) {
+
+                cout << "\n══════════════════════════════\n";
+
+                cout << "❌ Duplicate Student ID found. Record not added.\n";
+
+                cout << "══════════════════════════════\n";
+
+                cout << "[1] Edit Student ID\n";
+
+                cout << "[2] Cancel Add Record\n";
+
+                cout << "Enter choice: ";
+
+                int choice = getMenuChoice(1, 2);
+
+                if (choice == 2) return; // Cancel
+
+                duplicate = true;
+
+                break;
+
+            }
+
+        }
+
+
+
+        if (!duplicate) break; // No duplicate, proceed
+
+        attempts++;
+
+    }
+
+    if (attempts == 3) return;
+
+
+
+    // Name
+
+    attempts = 0;
+
+    while (attempts < 3) {
+
+        cout << "\n---------------------------------\n";
+
+        cout << "            Enter Name\n";
+
+        cout << "----------------------------------\n";
+
+        cout << "Enter Name: ";
+
+        getline(cin, name);
+
+        if (isValidName(name)) break;
+
+        cout << "❌ Invalid name!\n";
+
+        attempts++;
+
+    }
+
+    if (attempts == 3) return;
+
+
+
+    // Age
+
+    attempts = 0;
+
+    while (attempts < 3) {
+
+        cout << "\n----------------------------------\n";
+
+        cout << "            Enter Age\n";
+
+        cout << "═----------------------------------\n";
+
+        cout << "Enter Age: ";
+
+        getline(cin, age);
+
+        if (isValidAge(age)) break;
+
+        cout << "❌ Invalid age!\n";
+
+        attempts++;
+
+    }
+
+    if (attempts == 3) return;
+
+
+
+    // Gender
+
+    gender = selectGender();
+
+    if (gender.empty()) {
+
+        cout << "❌ Failed to select gender. Cancelling add record.\n";
+
+        return;
+
+    }
+
+
+
+    // Course & Year
+
+    courseYear = selectCourseYear();
+
+    if (courseYear.empty()) {
+
+        cout << "❌ Failed to select course/year. Cancelling add record.\n";
+
+        return;
+
+    }
+
+
+
+    // Status
+
+    status = selectStatus();
+
+    if (status.empty()) {
+
+        cout << "❌ Failed to select status. Cancelling add record.\n";
+
+        return;
+
+    }
+
+
+
+    // Contact
+
+    attempts = 0;
+
+    while (attempts < 3) {
+
+        cout << "\n═----------------------------------═\n";
+
+        cout << "        Enter Contact No.\n";
+
+        cout << "----------------------------------\n";
+
+        cout << "Enter Contact No.: ";
+
+        getline(cin, contact);
+
+
+
+        if (!isValidPhone(contact)) {
+
+            cout << "❌ Invalid phone number!\n";
+
+            attempts++;
+
+            continue;
+
+        }
+
+
+
+        // Check duplicate contact
+
+        bool duplicate = false;
+
+        for (const auto& record : records) {
+
+            if (record[6] == contact) {
+
+                cout << "\n----------------------------------\n";
+
+                cout << "❌ Duplicate Contact Number found. Record not added.\n";
+
+                cout << "----------------------------------\n";
+
+                cout << "[1] Edit Contact Number\n";
+
+                cout << "[2] Cancel Add Record\n";
+
+                cout << "Enter choice: ";
+
+                int choice = getMenuChoice(1, 2);
+
+                if (choice == 2) return;
+
+                duplicate = true;
+
+                break;
+
+            }
+
+        }
+
+
+
+        if (!duplicate) break;
+
+        attempts++;
+
+    }
+
+    if (attempts == 3) return;
+
+
+
+    // Email
+
+    cout << "\n----------------------------------\n";
+
+    cout << "    Enter Email Address (optional)\n";
+
+    cout << "----------------------------------\n";
+
+    cout << "Enter Email Address: ";
+
+    getline(cin, email);
+
+
+
+    if (!email.empty()) {
+
+        if (!isValidEmail(email)) {
+
+            cout << "❌ Invalid email. Leaving blank.\n";
+
+            email = "";
+
+        } else {
+
+            // Check duplicate email
+
+            for (const auto& record : records) {
+
+                if (record[7] == email) {
+
+                    cout << "\n══════════════════════════════\n";
+
+                    cout << "❌ Duplicate Email Address found. Record not added.\n";
+
+                    cout << "══════════════════════════════\n";
+
+                    cout << "[1] Edit Email Address\n";
+
+                    cout << "[2] Leave Email Blank\n";
+
+                    cout << "Enter choice: ";
+
+                    int choice = getMenuChoice(1, 2);
+
+                    if (choice == 1) {
+
+                        cout << "Enter New Email Address: ";
+
+                        getline(cin, email);
+
+                        if (!isValidEmail(email)) {
+
+                            cout << "❌ Still invalid. Leaving blank.\n";
+
+                            email = "";
+
+                        }
+
+                    } else {
+
+                        email = "";
+
+                    }
+
+                    break;
+
+                }
+
+            }
+
+        }
+
+    }
+
+
+
+    // Save record
+
+    records.push_back({studentID, name, age, gender, courseYear, status, contact, email});
+
+    cout << "\n✅ Record added successfully!\n";
+
+}
+
+void deleteRecord(vector<vector<string>>& records) {
+
+    if (records.empty()) {
+
+        cout << "\n📂 No records to delete.\n";
+
+        return;
+
+    }
+
+
+
+    displayRecords(records);  // Show current records
+
+
+
+    int index;
+
+    cout << "Enter the record number to delete: ";
+
+    cin >> index;
+
+
+
+    if (index < 1 || index > records.size()) {
+
+        cout << "❌ Invalid record number.\n";
+
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+        return;
+
+    }
+
+
+
+    index--;  // convert to 0-based index
+
+
+
+    char confirm;
+
+    cout << "Are you sure you want to delete this record? (y/n): ";
+
+    cin >> confirm;
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+
+
+    if (confirm == 'y' || confirm == 'Y') {
+
+        records.erase(records.begin() + index);
+
+        cout << "✅ Record deleted successfully!\n";
+
+    } else {
+
+        cout << "❌ Deletion cancelled.\n";
+
+    }
+
+}
+
+void displayMenu(const string& role) {
+
+    cout << "\n══════════════════════════════\n";
+
+    cout << "         📋 MAIN MENU         \n";
+
+    cout << "══════════════════════════════\n";
+
+    cout << "1. ➕ Add Record\n";
+
+    cout << "2. 📄 Display Records\n";
+
+    cout << "3. 🔍 Search Record\n";
+
+
+
+    if (role == "admin") {
+
+        cout << "4. ✏️  Edit Record\n";
+
+        cout << "5. 🗑️  Delete Record\n";
+
+        cout << "6. 👥 View Registered Accounts\n";
+
+        cout << "7. 🔃 Sort Records\n";
+
+        cout << "8. 🚪 Logout\n";
+
+    } else {
+
+        cout << "4. ✏️  Edit Record (restricted)\n";
+
+        cout << "5. 🗑️  Delete Record (restricted)\n";
+
+        cout << "6. 🔃 Sort Records\n";
+
+        cout << "7. 🚪 Logout\n";
+
+    }
+
+
+
+    cout << "══════════════════════════════\n";
+
+}
+
+int main() {
+
+    unordered_map<string, User> users = {
+
+        {"admin", {"admin", "admin", "admin"}},
+
+        {"user", {"user", "student", "student"}}
+
+    };
+
+
+
+    vector<vector<string>> records;
+
+    string userRole;
+
+
+
+    while (true) {
+
+        int bannerChoice;
+
+        do {
+
+            displayBannerWithButtons();
+
+            cout << "Enter your choice: ";
+
+            cin >> bannerChoice;
+
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+
+
+            if (cin.fail()) {
+
+                cin.clear();
+
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+                cout << "\n❌ Invalid input. Please enter a number.\n\n";
+
+                continue;
+
+            }
+
+
+
+            if (bannerChoice == 3) {
+
+                cout << "\nExiting program. Goodbye!\n";
+
+                return 0;
+
+            }
+
+
+
+            if (bannerChoice == 2) {
+
+                if (registerUser(users)) {
+
+                    cout << "You can now login with your new account.\n\n";
+
+                }
+
+            }
+
+
+
+        } while (bannerChoice != 1);
+
+
+
+        // Login Loop
+
+        while (!login(userRole, users)) {
+
+            cout << "Login failed. Try again.\n\n";
+
+        }
+
+
+
+        cout << "\n✅ Login successful!\n";
+
+        cout << "Welcome! You are logged in as: " << userRole << "\n\n";
+
+
+
+        // Main menu loop after login
+
+        bool logout = false;
+
+        while (!logout) {
+
+            displayMenu(userRole);
+
+
+
+            int choice;
+
+            cout << "Enter your choice: ";
+
+            cin >> choice;
+
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+
+
+            if (cin.fail()) {
+
+                cin.clear();
+
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+                cout << "❌ Invalid input! Please enter a valid number.\n";
+
+                continue;
+
+            }
+
+
+
+            if (userRole == "admin") {
+
+                switch (choice) {
+
+                    case 1: addRecord(records); break;
+
+                    case 2: displayRecords(records); break;
+
+                    case 3: searchRecord(records); break;
+
+                    case 4: editRecord(records); break;
+
+                    case 5: deleteRecord(records); break;
+
+                    case 6: displayRegisteredAccounts(users); break;
+
+                    case 7: sortRecords(records); break;
+
+                    case 8:
+
+                        cout << "Logging out...\n\n";
+
+                        logout = true;
+
+                        break;
+
+                    default:
+
+                        cout << "Invalid choice. Try again.\n";
+
+                }
+
+            } else { 
+
+                switch (choice) {
+
+                    case 1: addRecord(records); break;
+
+                    case 2: displayRecords(records); break;
+
+                    case 3: searchRecord(records); break;
+
+                    case 4:
+
+                    case 5:
+
+                        cout << "❌ Invalid choice. You do not have permission.\n";
+
+                        break;
+
+                    case 6: sortRecords(records); break;
+
+                    case 7:
+
+                        cout << "Logging out...\n\n";
+
+                        logout = true;
+
+                        break;
+
+                    default:
+
+                        cout << "Invalid choice. Try again.\n";
+
+                }
+
+            }
+
+        }
+
+    }
+
+
+
+    return 0;
+
+}
